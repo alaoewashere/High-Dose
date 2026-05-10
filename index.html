@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="High Dose — premium specialty coffee. Where every cup is an experience."
+    />
+    <title>High Dose — Premium Coffee</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Cpath fill='%23b8956a' d='M8 22c2-8 6-14 8-14s6 6 8 14H8z'/%3E%3C/svg%3E"
+      type="image/svg+xml"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="high%20dose%20logo.png"
+      fetchpriority="high"
+    />
+    <link rel="preload" as="image" href="frames/ezgif-frame-001.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Montserrat:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Montserrat:wght@300;400;700;900&display=swap"
+      />
+    </noscript>
+    <link rel="stylesheet" href="src/site.css" />
+
+  </head>
+  <body>
+    <div id="frame-loading" aria-hidden="true">
+      <div class="frame-loading__fill" id="frame-loading-fill"></div>
+    </div>
+
+    <div id="preloader" aria-live="polite" aria-busy="true">
+      <div class="smoke-container" id="smoke-container">
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+      </div>
+      <div class="glow" id="preloader-glow"></div>
+      <div class="logo-container" id="logo-container">
+        <div class="logo-text glitch" id="logo-text" data-text="HIGH DOSE">HIGH DOSE</div>
+        <div class="logo-sub">Premium Coffee</div>
+      </div>
+    </div>
+
+    <button type="button" id="skip-preloader">Skip Intro</button>
+
+    <main id="main-content" role="main">
+      <header class="site-nav" id="site-nav" role="banner">
+        <div class="site-nav__inner">
+          <a class="site-nav__logo" href="#hero" aria-label="High Dose — Home">
+            <div class="brand-container">
+              <img
+                src="high dose logo.png"
+                alt="High Dose wordmark logo in warm tones on transparent background"
+                class="brand-logo"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </div>
+          </a>
+          <nav class="site-nav__links" aria-label="Primary">
+            <a href="#menu">Menu</a>
+            <a href="#about">Philosophy</a>
+            <a href="#craft">Story</a>
+          </nav>
+          <div class="site-nav__actions">
+            <a class="site-nav__cta" href="#menu">Explore Menu</a>
+            <button
+              type="button"
+              class="site-nav__menu-toggle"
+              id="site-nav-toggle"
+              aria-label="Open menu"
+              aria-expanded="false"
+              aria-controls="site-nav-drawer"
+            >
+              <span class="site-nav__menu-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="site-nav__backdrop" id="site-nav-backdrop" aria-hidden="true"></div>
+        <div
+          class="site-nav__drawer"
+          id="site-nav-drawer"
+          role="dialog"
+          aria-label="Site menu"
+          aria-modal="true"
+          aria-hidden="true"
+        >
+          <nav aria-label="Mobile primary">
+            <a href="#menu">Menu</a>
+            <a href="#about">Philosophy</a>
+            <a href="#craft">Story</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="hero" id="hero" aria-labelledby="hero-heading">
+        <div class="hero__inner">
+          <p class="hero__eyebrow">Est. 2024 · Specialty Coffee</p>
+          <h1 id="hero-heading">HIGH<br />DOSE</h1>
+          <p class="hero__subtitle">
+            Where every cup is an experience crafted to awaken the senses.
+          </p>
+          <div class="hero__ctas">
+            <a class="btn-primary" href="#menu">Explore Menu</a>
+            <a class="btn-outline" href="#about">Our Story</a>
+          </div>
+        </div>
+        <div class="scroll-hint">
+          <div class="scroll-hint__line" aria-hidden="true"></div>
+          <span>Scroll</span>
+        </div>
+      </section>
+
+      <section
+        class="video-scroll-section"
+        id="experience"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Product experience scroll animation"
+      >
+        <div class="video-sticky">
+          <canvas id="frame-canvas" aria-hidden="true"></canvas>
+          <div class="video-vignette"></div>
+
+          <div class="scroll-overlay" id="scroll-ch1" data-chapter="0">
+            <div class="scroll-label">Pure Craft</div>
+            <div class="scroll-label-sub">Every bean, obsessively sourced</div>
+          </div>
+          <div class="scroll-overlay ch2" id="scroll-ch2" data-chapter="1">
+            <div class="scroll-label">The Ritual</div>
+            <div class="scroll-label-sub">Precision in every pour</div>
+          </div>
+          <div class="scroll-overlay" id="scroll-ch3" data-chapter="2">
+            <div class="scroll-label">High Dose</div>
+            <div class="scroll-label-sub">Taste the obsession</div>
+          </div>
+
+          <div class="chapter-marker" role="tablist" aria-label="Chapters">
+            <button type="button" class="chapter-dot active" data-ch="0" aria-label="Chapter 1"></button>
+            <button type="button" class="chapter-dot" data-ch="1" aria-label="Chapter 2"></button>
+            <button type="button" class="chapter-dot" data-ch="2" aria-label="Chapter 3"></button>
+          </div>
+
+          <div class="video-progress-bar">
+            <div class="video-progress-bar__fill" id="video-progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-about" id="about" role="region" aria-labelledby="heading-about">
+        <div class="section-about__grid">
+          <div>
+            <p class="eyebrow">Our Philosophy</p>
+            <h2 id="heading-about">Coffee<br />as Art</h2>
+            <p>
+              High Dose was born from a single conviction: that exceptional coffee demands exceptional care.
+              We source from single-origin farms, roast in-house weekly, and craft each drink with the
+              precision of a craftsman and the soul of an artist.
+            </p>
+            <a class="btn-outline" href="#craft">Read Our Story</a>
+          </div>
+          <div class="section-about__visual">
+            <picture>
+              <source type="image/webp" srcset="image%202.webp" />
+              <img
+                src="image%202.png"
+                alt="High Dose café interior and coffee preparation space"
+                width="1200"
+                height="1500"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-menu" id="menu" role="region" aria-labelledby="heading-menu">
+        <div class="section-menu__head">
+          <p class="eyebrow">Crafted Selections</p>
+          <h2 id="heading-menu">The Menu</h2>
+        </div>
+        <div id="menu-app-root" class="menu-app-root"></div>
+      </section>
+
+      <section class="section-craft" id="craft" role="region" aria-labelledby="heading-craft">
+        <div class="section-craft__grid">
+          <div class="section-craft__visual">
+            <picture>
+              <source type="image/webp" srcset="image.webp" />
+              <img
+                src="image.png"
+                alt="High Dose barista crafting drinks and coffee beans"
+                width="1200"
+                height="1500"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+          </div>
+          <div>
+            <p class="eyebrow">The Process</p>
+            <h2 id="heading-craft">CRAFTED TO PERFECTION</h2>
+            <p>
+              At High Dose, every drink begins with intention.
+From carefully selected coffee beans to premium ingredients, each element is chosen for quality and balance.
+
+Roasted, blended, and prepared with precision,
+every cup, every shake, every dessert is crafted to deliver a complete sensory experience.
+
+This is not just a café.
+This is High Dose.
+            </p>
+            <a class="btn-primary" href="#menu">Explore Menu</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer" id="contact">
+        <div class="site-footer__logo">High Dose</div>
+        <nav class="site-footer__nav" aria-label="Footer">
+          <a href="#menu">Menu</a>
+          <a href="#about">Our Story</a>
+          <a href="https://maps.app.goo.gl/ZHKK69xdUm4mN9g29" target="_blank" rel="noopener noreferrer">Find Us</a>
+          <a href="https://wa.me/905556465577" target="_blank" rel="noopener noreferrer">CONTACT US</a>
+          <a href="https://www.instagram.com/highdose.77/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </nav>
+        <p class="site-footer__copy">© 2026 High Dose. All rights reserved.</p>
+      </footer>
+    </main>
+
+    <div
+      id="imageModal"
+      class="image-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="modalCaption"
+    >
+      <button type="button" class="modal-close" aria-label="Close lightbox">&times;</button>
+      <img
+        class="modal-content"
+        id="modalImage"
+        alt=""
+        width="1200"
+        height="1200"
+        decoding="async"
+      />
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <div class="dev-credit-badge">Developed By <a href="https://www.instagram.com/_9pd_/" target="_blank" rel="noopener noreferrer">@_9pd_</a></div>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="js/frame-sequence.js"></script>
+    <script defer src="js/site-nav-drawer.js"></script>
+    <script defer src="js/menu-categories.js"></script>
+    <script defer src="js/menu-product-tilt.js"></script>
+  </body>
+</html>
