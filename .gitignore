@@ -1,2 +1,4 @@
 node_modules/
 .esbuild-temp/
+dist/
+everything-claude-code/
