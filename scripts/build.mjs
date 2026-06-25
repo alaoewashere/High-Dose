@@ -23,17 +23,12 @@ fs.mkdirSync(srcDir, { recursive: true });
 let indexHtml = fs.readFileSync(indexPath, "utf8");
 
 /* --- CSS: extract once, always minify from src/site.css --- */
+const siteCssPath = path.join(srcDir, "site.css");
 const hasDistCssLink = indexHtml.includes('href="dist/site.min.css"');
+const hasSrcCssLink = indexHtml.includes('href="src/site.css"');
 const styleOpen = indexHtml.indexOf("<style>");
 const styleClose = indexHtml.indexOf("</style>");
-
-if (!hasDistCssLink) {
-  if (styleOpen === -1 || styleClose === -1 || styleClose <= styleOpen) {
-    throw new Error("index.html: expected <style>…</style> for first build");
-  }
-  const cssRaw = indexHtml.slice(styleOpen + "<style>".length, styleClose).trim();
-  fs.writeFileSync(path.join(srcDir, "site.css"), cssRaw, "utf8");
-  const linkBlock = `    <link
+const distCssLinkBlock = `    <link
       rel="stylesheet"
       href="dist/site.min.css"
       media="print"
@@ -41,10 +36,32 @@ if (!hasDistCssLink) {
     />
     <noscript><link rel="stylesheet" href="dist/site.min.css" /></noscript>
 `;
-  indexHtml = indexHtml.slice(0, styleOpen) + linkBlock + indexHtml.slice(styleClose + "</style>".length);
-  fs.writeFileSync(indexPath, indexHtml, "utf8");
-  console.log("Extracted CSS → src/site.css, linked dist/site.min.css in index.html");
-  indexHtml = fs.readFileSync(indexPath, "utf8");
+
+if (!hasDistCssLink) {
+  if (styleOpen !== -1 && styleClose !== -1 && styleClose > styleOpen) {
+    const cssRaw = indexHtml.slice(styleOpen + "<style>".length, styleClose).trim();
+    fs.writeFileSync(siteCssPath, cssRaw, "utf8");
+    indexHtml = indexHtml.slice(0, styleOpen) + distCssLinkBlock + indexHtml.slice(styleClose + "</style>".length);
+    fs.writeFileSync(indexPath, indexHtml, "utf8");
+    console.log("Extracted CSS → src/site.css, linked dist/site.min.css in index.html");
+    indexHtml = fs.readFileSync(indexPath, "utf8");
+  } else if (hasSrcCssLink && fs.existsSync(siteCssPath)) {
+    indexHtml = indexHtml.replace(
+      /<link\s+rel="stylesheet"\s+href="src\/site\.css"\s*\/?>/,
+      distCssLinkBlock
+    );
+    fs.writeFileSync(indexPath, indexHtml, "utf8");
+    console.log("Linked dist/site.min.css in index.html (from src/site.css)");
+    indexHtml = fs.readFileSync(indexPath, "utf8");
+  } else {
+    throw new Error(
+      "index.html: expected <style>…</style>, href=\"src/site.css\", or href=\"dist/site.min.css\" for build"
+    );
+  }
+}
+
+if (!fs.existsSync(siteCssPath)) {
+  throw new Error("Missing src/site.css — cannot build CSS bundle");
 }
 
 await esbuild.build({
@@ -85,12 +102,9 @@ for (const name of ["site-nav-drawer.js", "menu-categories.js", "menu-product-ti
   });
 }
 
-/* --- Patch script tags in index.html (only when using bundled preloader, not CDN+js/frame) --- */
+/* --- Patch script tags in index.html for production bundles --- */
 indexHtml = fs.readFileSync(indexPath, "utf8");
-const usesCdnGsapAndLocalFrame =
-  indexHtml.includes("cdnjs.cloudflare.com/ajax/libs/gsap") &&
-  indexHtml.includes('src="js/frame-sequence.js"');
-if (!indexHtml.includes('src="dist/preloader.min.js"') && !usesCdnGsapAndLocalFrame) {
+if (!indexHtml.includes('src="dist/preloader.min.js"')) {
   indexHtml = indexHtml.replace(
     /<script defer src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/gsap\/[^"]+"><\/script>\s*\n?\s*<script defer src="js\/frame-sequence\.js"><\/script>/,
     '    <script defer src="dist/preloader.min.js"></script>'
