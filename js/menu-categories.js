@@ -11,7 +11,6 @@
     "Craft Coffee",
     "Energy Infusions",
     "Signature Drinks",
-    "Sweet Pairings",
   ];
 
   var IMG_FALLBACK = "images/10.jpeg";
@@ -41,7 +40,7 @@
   /** Simple CSV row: id,name,price,image,category,description (description may contain commas) */
   function parseProductLine(line) {
     var trimmed = line.trim();
-    if (!trimmed) return null;
+    if (!trimmed || trimmed.charAt(0) === "#") return null;
     var parts = trimmed.split(",");
     if (parts.length < 5) return null;
 
