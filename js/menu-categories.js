@@ -8,9 +8,13 @@
 
   var CATEGORIES = [
     "All",
-    "Craft Coffee",
-    "Energy Infusions",
-    "Signature Drinks",
+    "Coffee",
+    "Mojitos",
+    "High Dose Signatures",
+    "Sweet Deserts",
+    "Cookies",
+    "Milkshakes",
+    "Smoothies",
   ];
 
   var IMG_FALLBACK = "images/10.jpeg";
@@ -37,6 +41,17 @@
     return isNaN(n) ? 0 : n;
   }
 
+  function isMissingProductImage(image) {
+    var s = String(image || "").trim().toLowerCase();
+    return !s || s === "images.jpeg";
+  }
+
+  function normalizeCategory(category) {
+    var c = String(category || "").trim();
+    if (c === "Cofee") return "Coffee";
+    return c;
+  }
+
   /** Simple CSV row: id,name,price,image,category,description (description may contain commas) */
   function parseProductLine(line) {
     var trimmed = line.trim();
@@ -48,17 +63,12 @@
     var name = parts[1].trim();
     var price = parsePrice(parts[2]);
     var image = parts[3].trim();
-    var category = parts[4].trim();
+    var category = normalizeCategory(parts[4].trim());
     var desc = parts.slice(5).join(",").trim();
 
     var id = parseInt(idRaw, 10);
     if (isNaN(id) || id < 1) {
       id = products.length ? products[products.length - 1].id + 1 : 1;
-    }
-
-    if (!image) {
-      var imgNum = 10 + ((id - 1) % 31);
-      image = "images/" + imgNum + ".jpeg";
     }
 
     return {
@@ -120,37 +130,46 @@
       var media = document.createElement("div");
       media.className = "menu-product-card__media";
 
-      var picture = document.createElement("picture");
-      var source = document.createElement("source");
-      source.type = "image/webp";
-      source.srcset = imageWebpSrc(p.image);
-      picture.appendChild(source);
+      if (isMissingProductImage(p.image)) {
+        var loadingEl = document.createElement("div");
+        loadingEl.className = "menu-product-card__loading";
+        loadingEl.setAttribute("aria-hidden", "true");
+        loadingEl.textContent = "Loading";
+        media.appendChild(loadingEl);
+        media.style.cursor = "default";
+      } else {
+        var picture = document.createElement("picture");
+        var source = document.createElement("source");
+        source.type = "image/webp";
+        source.srcset = imageWebpSrc(p.image);
+        picture.appendChild(source);
 
-      var img = document.createElement("img");
-      img.src = p.image;
-      img.alt = p.desc ? p.name + " — product photo: " + p.desc : p.name + " — product photo";
-      img.setAttribute("data-product-name", p.name);
-      img.width = 800;
-      img.height = 800;
-      img.loading = "lazy";
-      img.decoding = "async";
-      img.addEventListener("error", function onImgErr(ev) {
-        var el = ev.currentTarget;
-        el.removeEventListener("error", onImgErr);
-        if (el.src.indexOf(IMG_FALLBACK) === -1) {
-          el.src = IMG_FALLBACK;
-          var pic = el.closest && el.closest("picture");
-          if (pic) {
-            var s = pic.querySelector("source[type='image/webp']");
-            if (s) s.srcset = imageWebpSrc(IMG_FALLBACK);
+        var img = document.createElement("img");
+        img.src = p.image;
+        img.alt = p.desc ? p.name + " — product photo: " + p.desc : p.name + " — product photo";
+        img.setAttribute("data-product-name", p.name);
+        img.width = 800;
+        img.height = 800;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.addEventListener("error", function onImgErr(ev) {
+          var el = ev.currentTarget;
+          el.removeEventListener("error", onImgErr);
+          if (el.src.indexOf(IMG_FALLBACK) === -1) {
+            el.src = IMG_FALLBACK;
+            var pic = el.closest && el.closest("picture");
+            if (pic) {
+              var s = pic.querySelector("source[type='image/webp']");
+              if (s) s.srcset = imageWebpSrc(IMG_FALLBACK);
+            }
+            return;
           }
-          return;
-        }
-        el.src = PLACEHOLDER_SRC;
-      });
+          el.src = PLACEHOLDER_SRC;
+        });
 
-      picture.appendChild(img);
-      media.appendChild(picture);
+        picture.appendChild(img);
+        media.appendChild(picture);
+      }
 
       var meta = document.createElement("div");
       meta.className = "menu-product-card__meta";
